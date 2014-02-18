@@ -8,7 +8,6 @@ var Buffer   = require('buffer').Buffer,
 var catServerIP = "54.197.244.191";
 var imgurIP = "23.23.110.58";
 
-
 // DNS Server.
 var dnsServer = dgram.createSocket('udp4');
 dnsServer.bind(53, 'localhost');
@@ -58,14 +57,10 @@ function createCatAnswer(query) {
   cat.answer.qname = query.question.qname;
   cat.transmogrifyIntoAnswer();
 
-  // Resolve imgur correctly.
+  // Resolve imgur correctly or there's no cats.
   var url = getBinaryStringAsBuffer(cat.answer.qname).toString();
-  var resolvedIp;
-  if (url.indexOf("imgur") != -1)
-    resolvedIp = ip.toLong(imgurIP);
-  else
-    resolvedIp = ip.toLong(catServerIP);
-  cat.answer.rdata = reverseString(new BitArray.from32Integer(resolvedIp).toString());
+  var resolvedIp = (url.indexOf("imgur") != -1) ? imgurIP : catServerIP;
+  cat.answer.rdata = getBinaryStringFromIp(resolvedIp);
   return cat;
 }
 
@@ -161,6 +156,13 @@ function getBinaryStringAsBuffer(s) {
   // TODO: I don't know why I need this to be reversed. Blerg. 
   // Maybe BitArrays save things backwards?
   return BitArray.fromBinary(reverseString(s)).toBuffer();  
+}
+
+function getBinaryStringFromIp(address) {
+  // This also needs to be reversed. Then it gets reversed twice.
+  // I really should read about this reversing.
+  return reverseString(new BitArray.from32Integer(
+      ip.toLong(address)).toString());
 }
 
 function reverseString(s) {
