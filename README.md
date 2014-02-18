@@ -15,7 +15,7 @@ To run, start the server as a privileged process. This is because to be a DNS se
 ```
 sudo node cat-dns.js
 ```
-You also need to somehow set your DNS server to be localhost. On a Mac, I do this by creating a new (wi-fi) interface (called Cats), in my Network preferences, and settings its DNS server to `127.0.0.1`. You could do this on your normal interface, but as a warning, while you're playing with this, pretty much nothing on your computer that requires the internet works. Except for your browser. And then that's mostly cats. So being able to deactivate it easily is kind of key (I know. You might think 'Why would I ever want to deactivate cats?', but trust me on this one).
+You also need to somehow set your DNS server to be localhost. On a Mac, I do this by creating a new (wi-fi) interface (called Cats), in my Network preferences, and settings its DNS server to `127.0.0.1`. You could do this on your normal interface, but as a warning, while you're playing with this, pretty much nothing on your computer that requires the internet works. Except for your browser. And then that's mostly cats. So being able to deactivate it easily is kind of key (I know. You might think 'Why would I ever want to deactivate cats?', but trust me on this one). I also recommend killing all the things that need to call the mothership (google hangouts, twitter feeds, dropbox, iMessage), because they will not like your sassy cat answers, and will slow everything down.
 
 ### You are ready
 Go in your browser to `www.google.com` and wait a bit. You should see a cat. Go to a different website. Another cat. Congratulations. Your internet is now all cats.
