@@ -4,18 +4,14 @@ var Buffer   = require('buffer').Buffer,
     ip       = require('ip'),
     http     = require('http');
 
-// Cat- serving server.
-var catServer = http.createServer(function (request, response) {
-  // TODO: Serve actual cats.
-  response.writeHead(200);
-  response.end("= ^__^ =\n");
-});
-catServer.listen(80);
+// This is a magical place of cats.
+var catServerIP = "54.197.244.191";
+var imgurIP = "23.23.110.58";
+
 
 // DNS Server.
 var dnsServer = dgram.createSocket('udp4');
 dnsServer.bind(53, 'localhost');
-
 
 dnsServer.on('message', function (msg, rinfo) {
   var start = new Date().getTime();
@@ -62,8 +58,14 @@ function createCatAnswer(query) {
   cat.answer.qname = query.question.qname;
   cat.transmogrifyIntoAnswer();
 
-  var fakeCat = ip.toLong("127.0.0.1");
-  cat.answer.rdata = reverseString(new BitArray.from32Integer(fakeCat).toString());
+  // Resolve imgur correctly.
+  var url = getBinaryStringAsBuffer(cat.answer.qname).toString();
+  var resolvedIp;
+  if (url.indexOf("imgur") != -1)
+    resolvedIp = ip.toLong(imgurIP);
+  else
+    resolvedIp = ip.toLong(catServerIP);
+  cat.answer.rdata = reverseString(new BitArray.from32Integer(resolvedIp).toString());
   return cat;
 }
 
