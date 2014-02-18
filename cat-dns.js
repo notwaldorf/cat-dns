@@ -85,11 +85,11 @@ var DNSSpec = {
   {name:"ns_count", bits: 16},
   {name:"ar_count", bits: 16}],
 question: [
-  {name:"qname", bits: -1},  // 32 bits from the end :(
+  {name:"qname", bits: -1},  // Variable length field. Ends 32 bits from the end. Do math. :(
   {name:"qtype", bits: 16},
   {name:"qclass", bits: 16}],
 answer: [
-  {name:"qname", bits: -1},  // Same as the question qname
+  {name:"qname", bits: -1},  // Same as the question qname.
   {name:"qtype", bits: 16},
   {name:"qclass", bits: 16},
   {name:"ttl", bits: 32},
