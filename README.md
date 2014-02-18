@@ -1,8 +1,7 @@
 cat-dns
 =======
 
-The internet needs more cats
-
+The internet needs more cats. DNS servers are the authority on all things internet. Therefore, the best DNS server is the one that resolves everthing to cats. Guess what kind of DNS server this is (Hint: it's the cat kind).
 
 ### Making it go
 
@@ -12,8 +11,11 @@ npm install node-bitarray
 npm install ip
 ```
 
-To run, start the server as a privileged process. This is because it's serving both a UDP server on port 53, and a regular, http server (for the cats), on port 80. Since they're small numbered ports, they need superpowers:
+To run, start the server as a privileged process. This is because to be a DNS server, you need to be a UDP server on port 53. This is a small numbered port, which means it needs superpowers. This is how your run it: 
 ```
 sudo node cat-dns.js
 ```
-Now go in your browser to `www.google.com` and wait a bit. You should see a cat. That's it, that's all.
+You also need to somehow set your DNS server to be localhost. On a Mac, I do this by creating a new (wi-fi) interface (called Cats), in my Network preferences, and settings its DNS server to `127.0.0.1`. You could do this on your normal interface, but as a warning, while you're playing with this, pretty much nothing on your computer that requires the internet works. Except for your browser. And then that's mostly cats. So being able to deactivate it easily is kind of key (I know. You might think 'Why would I ever want to deactivate cats?', but trust me on this one).
+
+### You are ready
+Go in your browser to `www.google.com` and wait a bit. You should see a cat. Go to a different website. Another cat. Congratulations. Your internet is now all cats.
