@@ -1,8 +1,7 @@
-var Buffer   = require('buffer').Buffer,
+var BitArray = require('node-bitarray'),
+    Buffer   = require('buffer').Buffer,
     dgram    = require('dgram'),
-    BitArray = require('node-bitarray'),
-    ip       = require('ip'),
-    http     = require('http');
+    ip       = require('ip');
 
 // This is a magical place of cats.
 var catServerIP = "54.197.244.191";
@@ -141,7 +140,7 @@ function DNSMessage() {
   this.transmogrifyIntoAnswer = function() {
     // Hardcoded answer fields.
     this.header.qr = '1';
-    this.header.aa = '0';
+    this.header.aa = '1';
     this.header.tc = '0';
     this.header.ra = '0';
     this.header.rcode = '0000';
