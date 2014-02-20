@@ -1,0 +1,11 @@
+{
+	"name" : "cat-dns",
+	"version" : "1.0.0",
+	"dependencies" : {
+		"node-bitarray" : "0.0.2",
+		"ip" : "0.3.0"
+	},
+	"bin" : {
+		"catdns" : "./cat-dns.js"
+	}
+}

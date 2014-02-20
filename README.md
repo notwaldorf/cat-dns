@@ -5,13 +5,12 @@ The internet needs more cats. DNS servers are the authority on all things intern
 
 ### Making it go
 
-Before you do anything, you need to install two node packages:
+Before you do anything, you need to install node packages:
 ```
-npm install node-bitarray
-npm install ip
+npm install
 ```
 
-To run, start the server as a privileged process. This is because to be a DNS server, you need to be a UDP server on port 53. This is a small numbered port, which means it needs superpowers. This is how your run it: 
+To run, start the server as a privileged process. This is because to be a DNS server, you need to be a UDP server on port 53. This is a small numbered port, which means it needs superpowers (however these are dumped once started). This is how your run it: 
 ```
 sudo node cat-dns.js
 ```

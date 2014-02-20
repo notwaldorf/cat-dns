@@ -32,6 +32,21 @@ dnsServer.on('message', function (msg, rinfo) {
   });
 });
 
+dnsServer.on("listening", function () {
+  console.log("Cat DNS is live");
+  if (process.getuid && process.setuid) {
+    console.log("Current uid: " + process.getuid());
+    try {
+      process.setuid(501);
+      console.log("New uid: " + process.getuid());
+      console.log("Cat DNS is now running on a safe uid");
+    }
+    catch (err) {
+      console.log("Failed to set uid: ", err);
+    }
+  }
+});
+
 dnsServer.addListener('error', function (e) {
   console.log("Oh no, cat error", e);
   throw e;
