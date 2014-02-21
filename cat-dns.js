@@ -13,7 +13,7 @@ dnsServer.bind(53, 'localhost');
 
 dnsServer.on('message', function (msg, rinfo) {
   var start = new Date().getTime();
-  var query = parseQuestion(new BitArray.fromBuffer(msg));
+  var query = parseQuestion(msg);
   var queryEnd = new Date().getTime();
 
   var answer = createCatAnswer(query);
@@ -53,13 +53,22 @@ dnsServer.addListener('error', function (e) {
 
 function parseQuestion(msg) {
   var query = new DNSMessage();
+  var bits = new BitArray.fromBuffer(msg);
 
-  var startBit = query.assemble(query.header, DNSSpec.header, msg, 0);
+  var startBit = query.assemble(query.header, DNSSpec.header, bits, 0);
 
   // Calculate the length of the qname field, as it isn't constant.
-  var qnameLength = msg.length - startBit - 2 * 16;
-  DNSSpec.question[0].bits = qnameLength;
-  query.assemble(query.question, DNSSpec.question, msg, startBit);
+  var labelOffset = startBit / 8;
+  var qnameLength = 0;
+  do {
+    var labelLength = msg.readUInt8(labelOffset);
+    qnameLength += 1;
+    qnameLength += labelLength;
+    labelOffset += labelLength + 1;
+  } while(labelLength);
+
+  DNSSpec.question[0].bits = qnameLength * 8;
+  query.assemble(query.question, DNSSpec.question, bits, startBit);
 
   return query;
 }
