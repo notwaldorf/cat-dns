@@ -77,7 +77,6 @@ function createCatAnswer(query) {
   var cat = new DNSMessage();
   cat.header = query.header;
   cat.question = query.question;
-  cat.answer.qname = query.question.qname;
   cat.transmogrifyIntoAnswer();
 
   // Resolve imgur correctly or there's no cats.
@@ -112,7 +111,7 @@ question: [
   {name:"qtype", bits: 16},
   {name:"qclass", bits: 16}],
 answer: [
-  {name:"qname", bits: -1},  // Same as the question qname.
+  {name:"qname", bits: 16},  // 2-byte pointer to the question name
   {name:"qtype", bits: 16},
   {name:"qclass", bits: 16},
   {name:"ttl", bits: 32},
@@ -160,6 +159,9 @@ function DNSMessage() {
     this.header.an_count = '0000000000000001';
     this.header.ns_count = '0000000000000000';
     this.header.ar_count = '0000000000000000';
+
+    // DNS label compressed pointer to position 12, see RFC1035 4.1.4
+    this.answer.qname = '1100000000001100';
 
     // Surely there's a better way.
     this.answer.qtype = '0000000000000001'; // A
