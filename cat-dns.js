@@ -120,6 +120,9 @@ function DNSMessage() {
 
     for (var i = 0; i < DNSSpec.header.length; i++)
       giantBinaryString += this.header[DNSSpec.header[i].name];
+
+    for (var i = 0; i < DNSSpec.question.length; i++) 
+      giantBinaryString += this.question[DNSSpec.question[i].name];
   
     for (var i = 0; i < DNSSpec.answer.length; i++) 
       giantBinaryString += this.answer[DNSSpec.answer[i].name];
@@ -144,8 +147,10 @@ function DNSMessage() {
     this.header.tc = '0';
     this.header.ra = '0';
     this.header.rcode = '0000';
-    this.header.an_count = this.header.qd_count;
-    this.header.qd_count = this.header.ns_count;
+    this.header.qd_count = '0000000000000001';
+    this.header.an_count = '0000000000000001';
+    this.header.ns_count = '0000000000000000';
+    this.header.ar_count = '0000000000000000';
 
     // Surely there's a better way.
     this.answer.qtype = '0000000000000001'; // A
