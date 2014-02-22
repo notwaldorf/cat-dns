@@ -80,7 +80,7 @@ function createCatAnswer(query) {
   cat.transmogrifyIntoAnswer();
 
   // Resolve imgur correctly or there's no cats.
-  var url = getBinaryStringAsBuffer(cat.answer.qname).toString();
+  var url = getBinaryStringAsBuffer(cat.question.qname).toString();
   var resolvedIp = (url.indexOf("imgur") != -1) ? imgurIP : catServerIP;
   cat.answer.rdata = getBinaryStringFromIp(resolvedIp);
   return cat;
