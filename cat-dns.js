@@ -13,7 +13,7 @@ dnsServer.bind(53, 'localhost');
 
 dnsServer.on('message', function (msg, rinfo) {
   var start = new Date().getTime();
-  var query = parseQuestion(new BitArray.fromBuffer(msg));
+  var query = parseQuestion(msg);
   var queryEnd = new Date().getTime();
 
   var answer = createCatAnswer(query);
@@ -53,13 +53,22 @@ dnsServer.addListener('error', function (e) {
 
 function parseQuestion(msg) {
   var query = new DNSMessage();
+  var bits = new BitArray.fromBuffer(msg);
 
-  var startBit = query.assemble(query.header, DNSSpec.header, msg, 0);
+  var startBit = query.assemble(query.header, DNSSpec.header, bits, 0);
 
   // Calculate the length of the qname field, as it isn't constant.
-  var qnameLength = msg.length - startBit - 2 * 16;
-  DNSSpec.question[0].bits = qnameLength;
-  query.assemble(query.question, DNSSpec.question, msg, startBit);
+  var labelOffset = startBit / 8;
+  var qnameLength = 0;
+  do {
+    var labelLength = msg.readUInt8(labelOffset);
+    qnameLength += 1;
+    qnameLength += labelLength;
+    labelOffset += labelLength + 1;
+  } while(labelLength);
+
+  DNSSpec.question[0].bits = qnameLength * 8;
+  query.assemble(query.question, DNSSpec.question, bits, startBit);
 
   return query;
 }
@@ -68,11 +77,10 @@ function createCatAnswer(query) {
   var cat = new DNSMessage();
   cat.header = query.header;
   cat.question = query.question;
-  cat.answer.qname = query.question.qname;
   cat.transmogrifyIntoAnswer();
 
   // Resolve imgur correctly or there's no cats.
-  var url = getBinaryStringAsBuffer(cat.answer.qname).toString();
+  var url = getBinaryStringAsBuffer(cat.question.qname).toString();
   var resolvedIp = (url.indexOf("imgur") != -1) ? imgurIP : catServerIP;
   cat.answer.rdata = getBinaryStringFromIp(resolvedIp);
   return cat;
@@ -103,7 +111,7 @@ question: [
   {name:"qtype", bits: 16},
   {name:"qclass", bits: 16}],
 answer: [
-  {name:"qname", bits: -1},  // Same as the question qname.
+  {name:"qname", bits: 16},  // 2-byte pointer to the question name
   {name:"qtype", bits: 16},
   {name:"qclass", bits: 16},
   {name:"ttl", bits: 32},
@@ -120,6 +128,9 @@ function DNSMessage() {
 
     for (var i = 0; i < DNSSpec.header.length; i++)
       giantBinaryString += this.header[DNSSpec.header[i].name];
+
+    for (var i = 0; i < DNSSpec.question.length; i++) 
+      giantBinaryString += this.question[DNSSpec.question[i].name];
   
     for (var i = 0; i < DNSSpec.answer.length; i++) 
       giantBinaryString += this.answer[DNSSpec.answer[i].name];
@@ -144,8 +155,13 @@ function DNSMessage() {
     this.header.tc = '0';
     this.header.ra = '0';
     this.header.rcode = '0000';
-    this.header.an_count = this.header.qd_count;
-    this.header.qd_count = this.header.ns_count;
+    this.header.qd_count = '0000000000000001';
+    this.header.an_count = '0000000000000001';
+    this.header.ns_count = '0000000000000000';
+    this.header.ar_count = '0000000000000000';
+
+    // DNS label compressed pointer to position 12, see RFC1035 4.1.4
+    this.answer.qname = '1100000000001100';
 
     // Surely there's a better way.
     this.answer.qtype = '0000000000000001'; // A
