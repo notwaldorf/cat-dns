@@ -4,7 +4,7 @@ var BitArray = require('node-bitarray'),
     ip       = require('ip');
 
 // This is a magical place of cats.
-var catServerIP = "54.197.244.191";
+var catServerIP = "162.243.219.187";
 var imgurIP = "23.23.110.58";
 
 // DNS Server.
