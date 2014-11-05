@@ -3,8 +3,9 @@ var BitArray = require('node-bitarray'),
     dgram    = require('dgram'),
     ip       = require('ip');
 
-// This is a magical place of cats.
-var catServerIP = "162.243.219.187";
+// This is a magical place of cats. This place keeps changing, so if you're getting a 
+// 502, check what cats.nanobit.org *actually* resolves to, and use that. Sorry!
+var catServerIP = "104.131.51.57"; 
 var imgurIP = "23.23.110.58";
 
 // DNS Server.
