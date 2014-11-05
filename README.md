@@ -20,7 +20,7 @@ You also need to somehow set your DNS server to be localhost. On a Mac, I do thi
 Go in your browser to `www.google.com` and wait a bit. You should see a cat. Go to a different website. Another cat. Congratulations. Your internet is now all cats.
 
 ### Wait what?
-Do not panic. While I recommend you don't look at the source because it's gross, if you do look at the source, you'll notice all it does is resolve any hostname to `162.243.219.187`, which is a magical place on the internet that has cats. You could also resolve everything to localhost, and serve your own cats on an http server on port 80. But then you'd have to store your own cats locally, and that is animal cruelty. Thankfully, for now, while that magical static IP exists, you don't have to. 
+Do not panic. While I recommend you don't look at the source because it's gross, if you do look at the source, you'll notice all it does is resolve any hostname to `104.131.51.57` (or whatever `cats.nanobit.org` actually resolves to, as it keeps changing), which is a magical place on the internet that has cats. You could also resolve everything to localhost, and serve your own cats on an http server on port 80. But then you'd have to store your own cats locally, and that is animal cruelty. Thankfully, for now, while that magical static IP exists, you don't have to. 
 That's it, that's all. 
 
 ### <3,
