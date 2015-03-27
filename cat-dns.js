@@ -5,12 +5,23 @@ var BitArray = require('node-bitarray'),
 
 // This is a magical place of cats. This place keeps changing, so if you're getting a 
 // 502, check what cats.nanobit.org *actually* resolves to, and use that. Sorry!
-var catServerIP = "104.131.51.57"; 
+var catServerIP = "104.131.51.57";
 var imgurIP = "23.23.110.58";
+
+// Argument parser
+var flags = {
+  host : 'localhost'
+};
+
+process.argv.forEach(function (val, index, array) {
+  if(val == '-h' || val == '--host') {
+    flags.host = process.argv[index + 1];
+  }
+});
 
 // DNS Server.
 var dnsServer = dgram.createSocket('udp4');
-dnsServer.bind(53, 'localhost');
+dnsServer.bind(53, flags.host);
 
 dnsServer.on('message', function (msg, rinfo) {
   var start = new Date().getTime();
@@ -19,7 +30,6 @@ dnsServer.on('message', function (msg, rinfo) {
 
   var answer = createCatAnswer(query);
   var answerEnd = new Date().getTime();
-  
   var buffer = answer.toBuffer();
   var bufferEnd = new Date().getTime();
 
@@ -33,7 +43,7 @@ dnsServer.on('message', function (msg, rinfo) {
 });
 
 dnsServer.on("listening", function () {
-  console.log("Cat DNS is live");
+  console.log("Cat DNS is live on host " + flags.host);
   if (process.getuid && process.setuid) {
     console.log("Current uid: " + process.getuid());
     try {
