@@ -14,7 +14,7 @@ var flags = {
 };
 
 process.argv.forEach(function (val, index, array) {
-  if(val == '-h' || val == '--host') {
+  if(val == '-a' || val == '--address') {
     flags.host = process.argv[index + 1];
   }
 });
